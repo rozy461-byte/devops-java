@@ -70,7 +70,7 @@ pipeline {
                             
                             echo "Building: \${DOCKER_IMAGE}:${IMAGE_TAG}"
                             
-                            docker build \\
+                            docker build --platform linux/amd64 \\
                                 --tag \${DOCKER_IMAGE}:${IMAGE_TAG} \\
                                 --tag \${DOCKER_IMAGE}:latest \\
                                 --file Dockerfile \\
@@ -167,7 +167,7 @@ pipeline {
                                     
                                     # Login to DockerHub
                                     echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
-                                    
+                                    set -e
                                     # Pull new image
                                     docker pull \${DOCKER_IMAGE}:${IMAGE_TAG}
                                     
