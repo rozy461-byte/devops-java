@@ -36,16 +36,6 @@ pipeline {
     }
 
     stages {
-
-        stage('✅ Verify Main Branch') {
-            when {
-                not { branch 'main' }
-            }
-            steps {
-                error("CD pipeline only runs on 'main' branch. Current: ${env.BRANCH_NAME}")
-            }
-        }
-
         stage('📋 CD Pipeline Info') {
             steps {
                 script {
