@@ -211,17 +211,20 @@ ENDSSH
                     sh """
                         echo "=== Preparing Health Check Environment ==="
                         
-                        /* START OF CHANGE: Install curl if missing and hit the verified root path */
+                        # [CHANGE: Use shell-compatible comments and install curl]
                         if ! command -v curl &> /dev/null; then
                             apk add --no-cache curl
                         fi
 
                         echo "=== Checking App on http://${DEPLOY_SERVER}:${APP_PORT}/ ==="
+                        
+                        # Giving the Spring Boot app time to initialize and connect to DB
                         sleep 30
                         
-                        # -f makes curl fail if it gets a 404 or 500
+                        # [CHANGE: We use the root path since actuator is returning 404]
+                        # -f ensures the pipeline fails if the response is 4xx or 5xx
                         curl -f http://${DEPLOY_SERVER}:${APP_PORT}/ || exit 1
-                        /* END OF CHANGE */
+                        # [END CHANGE]
                         
                         echo "✅ Application is healthy!"
                         echo "🌐 Live at: http://${DEPLOY_SERVER}:${APP_PORT}"
