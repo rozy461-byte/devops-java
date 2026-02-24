@@ -179,6 +179,7 @@ pipeline {
                                     docker run -d \\
                                         --name ${APP_NAME} \\
                                         --restart unless-stopped \\
+                                        --network private-net \\
                                         --env-file ${ENV_FILE} \\
                                         -p ${APP_PORT}:8080 \\
                                         \${DOCKER_IMAGE}:${IMAGE_TAG}
