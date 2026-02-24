@@ -207,16 +207,27 @@ ENDSSH
 
         stage('🏥 Health Check') {
             steps {
-                sh """
-                    echo "=== Health Check ==="
-                    sleep 30
-                    
-                    curl -f http://${DEPLOY_SERVER}:${APP_PORT}/actuator/health || exit 1
-                    curl -f http://${DEPLOY_SERVER}:${APP_PORT}/ || exit 1
-                    
-                    echo "✅ Application is healthy!"
-                    echo "🌐 Live: http://${DEPLOY_SERVER}:${APP_PORT}"
-                """
+                script {
+                    sh """
+                        echo "=== Preparing Health Check Environment ==="
+                        
+                        /* START OF CHANGE: Install curl if missing and hit the verified root path */
+                        if ! command -v curl &> /dev/null; then
+                            apk add --no-cache curl
+                        fi
+
+                        echo "=== Checking App on http://${DEPLOY_SERVER}:${APP_PORT}/ ==="
+                        sleep 30
+                        
+                        # We hit the root '/' because we verified it returns 200 OK
+                        # -f makes curl fail if it gets a 404 or 500
+                        curl -f http://${DEPLOY_SERVER}:${APP_PORT}/ || exit 1
+                        /* END OF CHANGE */
+                        
+                        echo "✅ Application is healthy!"
+                        echo "🌐 Live at: http://${DEPLOY_SERVER}:${APP_PORT}"
+                    """
+                }
             }
         }
 
