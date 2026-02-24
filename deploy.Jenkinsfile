@@ -27,12 +27,12 @@ pipeline {
         
         // Deployment server configuration
         DEPLOY_SERVER   = '185.199.53.175'
-        DEPLOY_USER     = 'deployer'
+        DEPLOY_USER     = 'jenkins'
         DEPLOY_PORT     = '22'
         APP_PORT        = '8080'
         
         // .env file path on production server
-        ENV_FILE        = '/home/deployer/.env'
+        ENV_FILE        = '/home/jenkins/.env'
     }
 
     stages {
