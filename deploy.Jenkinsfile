@@ -219,7 +219,6 @@ ENDSSH
                         echo "=== Checking App on http://${DEPLOY_SERVER}:${APP_PORT}/ ==="
                         sleep 30
                         
-                        # We hit the root '/' because we verified it returns 200 OK
                         # -f makes curl fail if it gets a 404 or 500
                         curl -f http://${DEPLOY_SERVER}:${APP_PORT}/ || exit 1
                         /* END OF CHANGE */
