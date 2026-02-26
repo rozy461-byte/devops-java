@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db-service:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-studentdb}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - private-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-studentdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-api:
+    build: .
+    container_name: spring_backend
+    ports:
+    # - host:container
+      - "8080:8080"
+    environment:
+      # These match the ${VAR} names in your application.properties
+      - DB_HOST=db-service
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-studentdb}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+    networks:
+      - private-net
+    depends_on:
+      db-service:
+        condition: service_healthy # Wait for the DB to be fully ready
+
+networks:
+  private-net:
+    name: private-net
+    driver: bridge
+
+volumes:
+  postgres_data:
