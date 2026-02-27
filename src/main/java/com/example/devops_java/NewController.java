@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AboutController {
-    @GetMapping("/about")
+public class NewController {
+    @GetMapping("/new")
     public String index() {
-        return "Hellow from aboutController!";
+        return "Hellow from newController to check the CI/CD pipeline";
     }
 }
